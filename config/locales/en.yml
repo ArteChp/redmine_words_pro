@@ -1,0 +1,83 @@
+en:
+  keywords: Keywords
+  layout: Layout
+  symbols_ranges: Symbols Ranges
+  words_ranges: Words Ranges
+  google_documents: Delivery (Google doc link)
+  button_check_doc: Check Doc
+  select_repo_word: Selection custom field for words range, google doc
+  select_words_count: Select custom field for words range
+  select_google_doc: Select custom field for google document
+  select_keywords: Select custom field for keywords
+  successful_message: Words Count Successful Message
+  min_unsuccessful_message: Words Count Unsuccessful Message that's less than necessary
+  max_unsuccessful_message: Words Count Unsuccessful Message that's more than necessary
+  successful_message_private_notes: Words Count Privacy for successful message
+  min_unsuccessful_message_private_notes: Words Count Privacy for unsuccessful message message that's less than necessary
+  max_unsuccessful_message_private_notes: Words Count Privacy for unsuccessful message message that's more than necessary
+  successful_keyword_verification_message: Keywords Successful Message
+  min_unsuccessful_keyword_verification_message: Unsuccessful Message that's contain less keywords than necessary
+  max_unsuccessful_keyword_verification_message: Unsuccessful Message that's contain more keywords than necessary
+  successful_keyword_verification_message_private_notes: Keywords Privacy for successful message
+  min_unsuccessful_keyword_verification_message_private_notes: Keywords Privacy for unsuccessful message message that's contain less keywords than necessary
+  max_unsuccessful_keyword_verification_message_private_notes: Keywords Privacy for unsuccessful message message that's contain more keywords than necessary
+  label_select_user: Select user
+  infelicity: Choose infelicity for words range
+  title_regexp: Regular Expression for title
+  description_regexp: Regular Expression for meta description
+  num_w: "First %{words} words"
+  num_p: "%{paragraph_number}st paragraph"
+  num_h: "%{headers_number}st header"
+  h_num: "All header%{headers_type}"
+  num_h_num: "%{headers_number}st header%{headers_type}"
+  title: Title
+  desc: Description
+  p: Paragraphs
+  h: Headings
+  every_h: Every heading
+  all: Anywhere
+  except_meta: Anywhere except meta
+  1p: First Paragraph
+  2p: Second Paragraph
+  3p: Third Paragraph
+  h1: "H1"
+  h2: "H2"
+  h3: "H3"
+  100w: First 100 Words
+  150w: First 150 Words
+  200w: First 200 Words
+  250w: First 250 Words
+  field_current_keyword: Keyword
+  field_current_google_document: Google Document
+  field_current_layout: Layout
+  field_current_kw_range: Kw Range
+  current_kw_range: Kw Range
+  label_select_template_field: Template Field
+  label_select_words_count_field: Words Count Field
+  label_symbols_count_field: Symbols Count Field
+  replaceable_field: Replaceable Field
+  credentials: Credentials
+  tables_heading: Tables Heading
+  kw_template: Keyword Template
+  select_template_field: Select Template Field
+  kw_range: range
+  form_layout_field: Layout for New and Edit
+  form_kw_range_field: Keyword Range for New and Edit
+  form_google_document_field: Google Document for New and Edit
+  form_keywords_field: Keywords for New and Edit Page
+  show_layout_field: Layout for Show Page
+  show_kw_range_field: Keyword Range for Show Page
+  show_google_document_field: Google Document for Show Page
+  show_keywords_field: Keywords for Show Page
+  units_type_count: Words Count
+  can_start_template: Can Start the Template
+  can_start_check_docs: Can Check Documents
+  show_units_type_count: Units Type for Show Page
+  title_characters_range: Title characters range
+  description_characters_range: Description characters range
+  title_characters_range_type: Title characters range type
+  description_characters_range_type: Description characters range type
+  show_description_characters_range_type_field: Description characters range
+  show_description_characters_range_field: Description characters range type
+  show_title_characters_range_type_field: Title characters range type
+  show_title_characters_range_field: Title characters range

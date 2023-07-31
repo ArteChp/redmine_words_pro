@@ -1,0 +1,193 @@
+<%= render 'settings/form_visible/layout', settings: @settings %>
+<%= render 'settings/form_visible/kw_range', settings: @settings %>
+<%= render 'settings/form_visible/google_documents', settings: @settings %>
+<%= render 'settings/form_visible/keywords', settings: @settings %>
+<%= render 'settings/show_visible/layout', settings: @settings %>
+<%= render 'settings/show_visible/kw_range', settings: @settings %>
+<%= render 'settings/show_visible/google_documents', settings: @settings %>
+<%= render 'settings/show_visible/keywords', settings: @settings %>
+
+<div>
+  <div class="box tabular">
+    <h4><%= l(:select_template_field) %></h4>
+    <p>
+      <%= label_tag 'settings[replaceable_field]', l(:replaceable_field) %>
+      <%= text_area_tag 'settings[replaceable_field]', @settings['replaceable_field'] %>
+    </p>
+  </div>
+
+  <div class="box tabular">
+    <p>
+      <%= label_tag 'settings[tables_heading]', l(:tables_heading) %>
+      <%= text_area_tag 'settings[tables_heading]', @settings['tables_heading'] %>
+    </p>
+  </div>
+
+  <div class="box tabular">
+    <p>
+      <%= label_tag 'settings[infelicity]', l(:infelicity) %>
+      <%= number_field_tag 'settings[infelicity]', @settings['infelicity'] %>
+    </p>
+  </div>
+</div>
+
+<div class="splitcontentright">
+  <div class="box tabular">
+    <fieldset class="box tabular"><legend><%= l(:field_visible) %></legend>
+      <label class="block">
+        <%= radio_button_tag 'settings[custom_field_visible]', 1, @settings['custom_field_visible'].to_b, :id => 'custom_field_visible_on', :data => {:disables => '.custom_field_role input'} %>
+        <%= l(:label_visibility_public) %>
+      </label>
+      <label class="block">
+        <%= radio_button_tag 'settings[custom_field_visible]', 0, !@settings['custom_field_visible'].to_b, :id => 'custom_field_visible_off', :data => {:enables => '.custom_field_role input'} %>
+        <%= l(:label_visibility_roles) %>:
+      </label>
+      <% role_ids = @settings['custom_field_role_ids'] %>
+      <% Role.givable.sorted.each do |role| %>
+        <label class="block custom_field_role" style="padding-left:2em;">
+          <%= check_box_tag 'settings[custom_field_role_ids][]', role.id, role_ids.nil? ? false : role_ids.include?(role.id.to_s) , :id => nil %>
+          <%= role.name %>
+        </label>
+      <% end %>
+      <%= hidden_field_tag 'settings[custom_field_role_ids][]', '' %>
+    </fieldset>
+    <fieldset class="box" id="custom_field_tracker_ids">
+      <legend>
+        <%= toggle_checkboxes_link("#custom_field_tracker_ids input[type=checkbox]") %>
+        <%=l(:label_tracker_plural)%>
+      </legend>
+      <% tracker_ids = @settings['custom_field_tracker_ids'] %>
+      <% Tracker.sorted.each do |tracker| %>
+      <label class="block" for="custom_field_tracker_ids_<%=tracker.id%>" style="padding-left:2em;">
+        <%= check_box_tag 'settings[custom_field_tracker_ids][]', tracker.id, tracker_ids.nil? ? false : tracker_ids.include?(tracker.id.to_s), :id => 'custom_field_tracker_ids_#{tracker.id}' %>
+        <%= tracker.name %>
+      </label>
+      <% end %>
+      <%= hidden_field_tag 'settings[custom_field_tracker_ids][]', '' %>
+    </fieldset>
+  </div>
+
+  <div class="box tabular">
+    <p>
+      <%= label_tag 'settings[successful_message]', l(:successful_message) %>
+      <%= text_area_tag 'settings[successful_message]', @settings['successful_message'] %>
+    </p>
+
+    <p>
+      <% private_notes_list = [['Yes', true], ['No', false]] %>
+      <%= label_tag 'settings[successful_message_private_notes]', l(:successful_message_private_notes) %>
+      <%= select_tag 'settings[successful_message_private_notes]', options_for_select(private_notes_list, @settings['successful_message_private_notes'] ) %>
+    </p>
+  </div>
+
+  <div class="box tabular">
+    <p>
+      <%= label_tag 'settings[min_unsuccessful_message]', l(:min_unsuccessful_message) %>
+      <%= text_area_tag 'settings[min_unsuccessful_message]', @settings['min_unsuccessful_message'] %>
+    </p>
+
+    <p>
+      <% private_notes_list = [['Yes', true], ['No', false]] %>
+      <%= label_tag 'settings[min_unsuccessful_message_private_notes]', l(:min_unsuccessful_message_private_notes) %>
+      <%= select_tag 'settings[min_unsuccessful_message_private_notes]', options_for_select(private_notes_list, @settings['min_unsuccessful_message_private_notes'] ) %>
+    </p>
+  </div>
+
+  <div class="box tabular">
+    <p>
+      <%= label_tag 'settings[max_unsuccessful_message]', l(:max_unsuccessful_message) %>
+      <%= text_area_tag 'settings[max_unsuccessful_message]', @settings['max_unsuccessful_message'] %>
+    </p>
+
+    <p>
+      <% private_notes_list = [['Yes', true], ['No', false]] %>
+      <%= label_tag 'settings[max_unsuccessful_message_private_notes]', l(:max_unsuccessful_message_private_notes) %>
+      <%= select_tag 'settings[max_unsuccessful_message_private_notes]', options_for_select(private_notes_list, @settings['max_unsuccessful_message_private_notes'] ) %>
+    </p>
+  </div>
+
+  <div class="box tabular">
+    <p>
+      <%= label_tag 'settings[successful_keyword_verification_message]', l(:successful_keyword_verification_message) %>
+      <%= text_area_tag 'settings[successful_keyword_verification_message]', @settings['successful_keyword_verification_message'] %>
+    </p>
+
+    <p>
+      <% private_notes_list = [['Yes', true], ['No', false]] %>
+      <%= label_tag 'settings[successful_keyword_verification message_private_notes]', l(:successful_keyword_verification_message_private_notes) %>
+      <%= select_tag 'settings[successful_keyword verification_message_private_notes]', options_for_select(private_notes_list, @settings['successful_keyword_verification_message_private_notes'] ) %>
+    </p>
+  </div>
+
+  <div class="box tabular">
+    <p>
+      <%= label_tag 'settings[min_unsuccessful_keyword_verification_message]', l(:min_unsuccessful_keyword_verification_message) %>
+      <%= text_area_tag 'settings[min_unsuccessful_keyword_verification_message]', @settings['min_unsuccessful_keyword_verification_message'] %>
+    </p>
+
+    <p>
+      <% private_notes_list = [['Yes', true], ['No', false]] %>
+      <%= label_tag 'settings[min_unsuccessful_keyword verification_message_private_notes]', l(:min_unsuccessful_keyword_verification_message_private_notes) %>
+      <%= select_tag 'settings[min_unsuccessful_keyword verification_message_private_notes]', options_for_select(private_notes_list, @settings['min_unsuccessful_keyword_verification_message_private_notes'] ) %>
+    </p>
+  </div>
+
+  <div class="box tabular">
+    <p>
+      <%= label_tag 'settings[max_unsuccessful_keyword_verification_message]', l(:max_unsuccessful_keyword_verification_message) %>
+      <%= text_area_tag 'settings[max_unsuccessful_keyword_verification_message]', @settings['max_unsuccessful_keyword_verification_message'] %>
+    </p>
+
+    <p>
+      <% private_notes_list = [['Yes', true], ['No', false]] %>
+      <%= label_tag 'settings[max_unsuccessful_keyword_verification_message_private_notes]', l(:max_unsuccessful_keyword_verification_message_private_notes) %>
+      <%= select_tag 'settings[max_unsuccessful_message_keyword_verification_message_notes]', options_for_select(private_notes_list, @settings['max_unsuccessful_keyword_verification_message_private_notes'] ) %>
+    </p>
+  </div>
+</div>
+
+<div class="splitcontentright">
+  <div class="box tabular">
+    <p>
+      <% user_list = Array.new %>
+      <% User.find_each { |u| user_list << [u.login, u.id] } %>
+      <%= label_tag 'settings[select_user]', l(:label_select_user) %>
+      <%= select_tag 'settings[select_user]',  options_for_select(user_list, @settings['select_user'] ) %>
+    </p>
+    <p>
+      <%= label_tag 'settings[infelicity]', l(:infelicity) %>
+      <%= number_field_tag 'settings[infelicity]', @settings['infelicity'] %>
+    </p>
+  </div>
+
+  <div class="box tabular">
+    <p>
+      <%= label_tag 'settings[tables_heading]', l(:tables_heading) %>
+      <%= text_area_tag 'settings[tables_heading]', @settings['tables_heading'] %>
+    </p>
+  </div>
+</div>
+
+<p>
+  <%= label_tag 'settings[credentials]', l(:credentials) %>
+  <%= text_area_tag 'settings[credentials]', @settings['credentials'] %>
+</p>
+
+<div class="box tabular">
+  <p>
+    <%= label_tag 'settings[title_regexp]', l(:title_regexp) %>
+    <%= text_area_tag 'settings[title_regexp]', @settings['title_regexp'] %>
+  </p>
+  <p>
+    <%= label_tag 'settings[description_regexp]', l(:description_regexp) %>
+    <%= text_area_tag 'settings[description_regexp]', @settings['description_regexp'] %>
+  </p>
+</div>
+
+<%= render 'settings/show_visible/units_type_count', settings: @settings %>
+<%= render 'settings/form_visible/template', settings: @settings %>
+<%= render 'settings/form_visible/check_docs', settings: @settings %>
+<%= render 'settings/show_visible/title_characters_range', settings: @settings %>
+<%= render 'settings/show_visible/title_characters_range_type', settings: @settings %>
+<%= render 'settings/show_visible/description_characters_range', settings: @settings %>
+<%= render 'settings/show_visible/description_characters_range_type', settings: @settings %>

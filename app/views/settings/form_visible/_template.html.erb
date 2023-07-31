@@ -1,0 +1,19 @@
+<h4><%= l(:can_start_template) %></h4>
+<fieldset class="box tabular"><legend><%= l(:field_visible) %></legend>
+  <label class="block">
+    <%= radio_button_tag 'settings[form_template_visible]', 1, settings['form_template_visible'].to_b, :id => 'form_template_visible_on', :data => {:disables => '.layout_role input'} %>
+    <%= l(:label_visibility_public) %>
+  </label>
+  <label class="block">
+    <%= radio_button_tag 'settings[form_template_visible]', 0, !settings['form_template_visible'].to_b, :id => 'form_template_visible_off', :data => {:enables => '.layout_role input'} %>
+    <%= l(:label_visibility_roles) %>:
+  </label>
+  <% role_ids = settings['form_template_role_ids'] %>
+  <% Role.givable.sorted.each do |role| %>
+    <label class="block layout_role" style="padding-left:2em;">
+      <%= check_box_tag 'settings[form_template_role_ids][]', role.id, role_ids.nil? ? false : role_ids.include?(role.id.to_s) , :id => nil %>
+      <%= role.name %>
+    </label>
+  <% end %>
+  <%= hidden_field_tag 'settings[form_template_role_ids][]', '' %>
+</fieldset>

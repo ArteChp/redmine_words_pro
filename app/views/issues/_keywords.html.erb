@@ -1,0 +1,77 @@
+<% if Setting.plugin_redmine_keywords['show_keywords_tracker_ids'].include? @issue.try(:tracker_id).to_s %>
+  <% if User.current.admin? || Setting.plugin_redmine_keywords['show_keywords_visible'] == "1" || (User.current.roles.any? && (User.current.roles_for_project(@issue.project).map(&:id).to_a.map(&:to_s) & Setting.plugin_redmine_keywords['show_keywords_role_ids'].to_a.map(&:to_s)).any? && Setting.plugin_redmine_keywords['show_keywords_visible'] == "0") %>
+    <% if issue.keyword %>
+      <%= issue_fields_rows { |rows| rows.left l(:keywords), issue.keyword.current } %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if Setting.plugin_redmine_keywords['show_layout_tracker_ids'].include? @issue.try(:tracker_id).to_s %>
+  <% if User.current.admin? || Setting.plugin_redmine_keywords['show_layout_visible'] == "1" || (User.current.roles.ids.any? && (User.current.roles_for_project(@issue.project).map(&:id).to_a.map(&:to_s) & Setting.plugin_redmine_keywords['show_layout_role_ids'].to_a.map(&:to_s)).any? && Setting.plugin_redmine_keywords['show_layout_visible'] == "0") %>
+    <% if issue.layout.present? %>
+      <%= issue_fields_rows { |rows| rows.left l(:layout), issue.layout.layout } %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if Setting.plugin_redmine_keywords['show_google_documents_tracker_ids'].include? @issue.try(:tracker_id).to_s %>
+  <% if User.current.admin? || Setting.plugin_redmine_keywords['show_google_documents_visible'] == "1" || (User.current.roles.any? && (User.current.roles_for_project(@issue.project).map(&:id).to_a.map(&:to_s) & Setting.plugin_redmine_keywords['show_google_documents_role_ids'].to_a.map(&:to_s)).any? && Setting.plugin_redmine_keywords['show_google_documents_visible'] == "0") %>
+    <% if issue.google_document && issue.google_document.current %>
+      <%= issue_fields_rows { |rows| rows.left l(:google_documents), (link_to issue.google_document.current, issue.google_document.current, class: "google-doc-link") } %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if Setting.plugin_redmine_keywords['show_kw_range_tracker_ids'].include? @issue.try(:tracker_id).to_s %>
+  <% if User.current.admin? || Setting.plugin_redmine_keywords['show_kw_range_visible'] == "1" || (User.current.roles.any? && (User.current.roles_for_project(@issue.project).map(&:id).to_a.map(&:to_s) & Setting.plugin_redmine_keywords['show_kw_range_role_ids'].to_a.map(&:to_s)).any? && Setting.plugin_redmine_keywords['show_kw_range_visible'] == "0") %>
+    <% if issue.kw_range %>
+      <%= issue_fields_rows { |rows| rows.left "#{issue.kw_range.kw_range_type} #{l(:kw_range)}", "#{issue.kw_range.current}" } %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if Setting.plugin_redmine_keywords['show_units_type_count_tracker_ids'].to_a.include? @issue.try(:tracker_id).to_s %>
+  <% if User.current.admin? || Setting.plugin_redmine_keywords['show_units_type_count_visible'] == "1" || (User.current.roles.any? && (User.current.roles_for_project(@issue.project).map(&:id).to_a.map(&:to_s) & Setting.plugin_redmine_keywords['show_units_type_count_role_ids'].to_a.map(&:to_s)).any? && Setting.plugin_redmine_keywords['show_units_type_count_visible'] == "0") %>
+    <% if issue.units_type_count %>
+      <%= issue_fields_rows { |rows| rows.left l(:units_type_count), issue.units_type_count.try(:count) } %>
+    <% end %>
+  <% end %>
+<% end %>
+
+
+
+<% if Setting.plugin_redmine_keywords['show_title_characters_range_tracker_ids'].include? @issue.try(:tracker_id).to_s %>
+  <% if not issue.title_characters_range.try(:current).to_s.empty? && (User.current.admin? || Setting.plugin_redmine_keywords['show_title_characters_range_visible'] == "1" || (User.current.roles.any? && (User.current.roles_for_project(@issue.project).map(&:id).to_a.map(&:to_s) & Setting.plugin_redmine_keywords['show_title_characters_range_role_ids'].to_a.map(&:to_s)).any? && Setting.plugin_redmine_keywords['show_title_characters_range_visible'] == "0")) %>
+    <%= issue_fields_rows { |rows| rows.left l(:title_characters_range), [issue.title_characters_range.try(:current), issue.title_characters_range.try(:range_type)].join(' ') } %>
+  <% end %>
+<% end %>
+
+<%
+=begin%>
+
+<% if Setting.plugin_redmine_keywords['show_title_characters_range_type_tracker_ids'].include? @issue.try(:tracker_id).to_s %>
+  <% if not issue.title_characters_range.try(:current).to_s.empty? && (User.current.admin? || Setting.plugin_redmine_keywords['show_title_characters_range_type_visible'] == "1" || (User.current.roles.any? && (User.current.roles_for_project(@issue.project).map(&:id).to_a.map(&:to_s) & Setting.plugin_redmine_keywords['show_title_characters_range_type_role_ids'].to_a.map(&:to_s)).any? && Setting.plugin_redmine_keywords['show_title_characters_range_type_visible'] == "0")) %>
+    <%= issue_fields_rows { |rows| rows.left l(:title_characters_range_type), issue.title_characters_range.try(:range_type) } %>
+  <% end %>
+<% end %>
+
+<%
+=end%>
+
+<% if Setting.plugin_redmine_keywords['show_description_characters_range_tracker_ids'].include? @issue.try(:tracker_id).to_s %>
+  <% if not issue.description_characters_range.try(:current).to_s.empty? && (User.current.admin? || Setting.plugin_redmine_keywords['show_description_characters_range_visible'] == "1" || (User.current.roles.any? && (User.current.roles_for_project(@issue.project).map(&:id).to_a.map(&:to_s) & Setting.plugin_redmine_keywords['show_description_characters_range_role_ids'].to_a.map(&:to_s)).any? && Setting.plugin_redmine_keywords['show_description_characters_range_visible'] == "0")) %>
+    <%= issue_fields_rows { |rows| rows.left l(:description_characters_range), [issue.description_characters_range.try(:current), issue.description_characters_range.try(:range_type)].join(' ') } %>
+  <% end %>
+<% end %>
+
+<%
+=begin%>
+
+<% if Setting.plugin_redmine_keywords['show_description_characters_range_type_tracker_ids'].include? @issue.try(:tracker_id).to_s %>
+  <% if not issue.description_characters_range.try(:current).to_s.empty? && (User.current.admin? || Setting.plugin_redmine_keywords['show_description_characters_range_type_visible'] == "1" || (User.current.roles.any? && (User.current.roles_for_project(@issue.project).map(&:id).to_a.map(&:to_s) & Setting.plugin_redmine_keywords['show_description_characters_range_type_role_ids'].to_a.map(&:to_s)).any? && Setting.plugin_redmine_keywords['show_description_characters_range_type_visible'] == "0")) %>
+    <%= issue_fields_rows { |rows| rows.left l(:description_characters_range_type), issue.description_characters_range.try(:range_type) } %>
+  <% end %>
+<% end %>
+
+<%
+=end%>

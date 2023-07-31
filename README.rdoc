@@ -1,0 +1,10 @@
+Must have:
+apt-get install unoconv
+
+Instructions for working with google documents:
+  1. visit https://developers.google.com/docs/api/quickstart/ruby?authuser=1
+  2. click Enable the Google Docs API and choose "Desktop App"
+  3. In resulting dialog click DOWNLOAD CLIENT CONFIGURATION and save the file
+     credentials.json to plugins/redmine_keywords/config/docs-api-credentials.json
+  4. Run google-auth.rb
+  5. follow the instructions to get credentials

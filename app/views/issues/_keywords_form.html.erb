@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <style>
+    .d-flex,
+    .tabs-label,
+    .select-set-box {
+    	display: -webkit-box;
+    	display: -ms-flexbox;
+    	display: flex;
+    }
+
+    .tabs-label {
+    	margin-top: 50px;
+    }
+
+    .tab-label {
+    	border-top-left-radius: 10px;
+    	border-top-right-radius: 10px;
+    	padding: 20px 40px;
+    	border: 1px solid #ccc;
+    	border-bottom: none;
+    	cursor: pointer;
+    }
+
+    .tab-label.active {
+    	background: #e3e2e2;
+    	border: none;
+    }
+
+    .tabs-box {
+    	border: 1px solid #ccc;
+    	height: 400px;
+    	overflow: hidden;
+    }
+
+    .tab-box {
+    	width: 100%;
+    	height: 100%;
+    	max-width: 1250px;
+    	overflow-y: auto;
+    }
+
+    .tab-box:first-child {
+    	overflow: hidden;
+    }
+
+    #my-textarea {
+    	border: 1px solid #ccc;
+    	width: 95%;
+    	padding: 15px;
+    }
+
+    .keywords-box {
+    	padding: 0px 0px 0px 2px;
+    	-webkit-box-sizing: border-box;
+    	box-sizing: border-box;
+    	width: 100%;
+    	position: relative;
+    	margin-bottom: 3px;
+    }
+
+    .select_title {
+      width: 100%;
+    }
+
+    .left-keywords-box {
+    	width: 65%;
+    	padding-right: 5px;
+      padding-top: 2px;
+    }
+
+    .right-keywords-box {
+    	width: 30%;
+    }
+
+    .title-keywords {
+    	width: 87%;
+    	height: 25px;
+    	background: #fff;
+    	padding: 0 15px;
+    }
+
+    .keywords {
+    	width: 100%;
+    	min-height: 150px;
+    	line-height: 23px;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+
+    .select-title {
+    	width: calc(100% - 52px);
+    	height: 25px;
+    	padding: 0 15px;
+      margin-left: 25px;
+    }
+
+    .remove-box {
+      width: 25px;
+      height: 25px;
+      padding: 6px;
+      font-size: 25px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+    }
+
+    .remove-box:hover {
+      color: #FD397A;
+      # background-color: rgba(253, 57,122,0.15);
+    }
+
+    .toolbar {
+      margin-top: 3px;
+    }
+
+    .add-box {
+      position: relative;
+      top: 55px;
+      width: 25px;
+      height: 25px;
+      padding: 6px;
+      # line-height: 22px;
+      font-size: 30px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .add-box:hover {
+      color: rgb(85,120,235);
+      # background-color: rgba(85, 120, 235, 0.15);
+    }
+
+    .kw-tab-edit {
+      position: relative;
+      left: 40px;
+    }
+
+    .wrapper-input {
+    	position: relative;
+    }
+
+    #issue_kw_list {
+      position: relative;
+      left: 45px;
+    }
+
+    .list-title {
+    	-webkit-box-sizing: border-box;
+    	box-sizing: border-box;
+    	border: 1px solid #ccc;
+    	position: absolute;
+    	padding-left: 0;
+    	margin: 0;
+    	width: 100%;
+    	z-index: 10;
+    	left: 0;
+    	top: 100%;
+    	background: #fff;
+    	max-height: 200px;
+    	overflow: auto;
+    }
+
+    .list-title li {
+    	cursor: pointer;
+    	list-style: none;
+    	padding: 10px 15px;
+    	border-bottom: 1px solid #ccc;
+    }
+
+    .list-title li:last-child {
+    	border-bottom: none;
+    }
+
+    .add-box {
+    	bottom: 20px;
+    	line-height: 22px;
+    }
+
+    .remove-box {
+    	top: 20px;
+    	line-height: 21px;
+    }
+
+    .input-set {
+    	font-size: 13px;
+    	height: 21px;
+    	width: calc(60% - 10px);
+    }
+
+    .select-set {
+    	width: 30%;
+      height: 20px;
+    }
+
+    .select-title.error {
+    	border: 1px solid red;
+    	background: #f8e5e5;
+    }
+
+    .material-icons {
+      font-size: 15px;
+    }
+
+    .actions {
+      text-align:center;
+    }
+
+    .add-close {
+      bottom: 20px;
+      line-height: 22px;
+    }
+
+    .add-close {
+      top: 120px;
+      height: 25px;
+      line-height: 22px;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .icon-close {
+      background-image: url(../images/false.png);
+    }
+
+    .location {
+      margin-left: 25%;
+      font-weight: normal;
+    }
+
+    .list li {
+      width: 100px;
+    }
+
+    .list li:nth-child(2) {
+      width: 30px;
+    }
+
+    .edit {
+      margin-left: -25px;
+    }
+
+    #template-select {
+      padding-right: 11px;
+      padding-left: 0px;
+      background-position: 0px;
+      background-image: url(../plugin_assets/redmine_keywords/images/pen_ca_2.jpg);
+      height: 11px;
+      width: 7px;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+    }
+
+  </style>
+
+  <body>
+    <%
+      def keyword_wikitoolbar_for(field_id, preview_url = preview_text_path)
+        heads_for_wiki_formatter
+        url = "#{Redmine::Utils.relative_url_root}/help/#{current_language.to_s.downcase}/wiki_syntax_markdown.html"
+        javascript_tag("var wikiToolbar = new jsToolBar(document.getElementById('#{field_id}')); wikiToolbar.setHelpLink('#{escape_javascript url}'); wikiToolbar.setPreviewUrl('#{escape_javascript preview_url}'); wikiToolbar.draw();") +
+        javascript_tag("new jsTemplateSelect(document.getElementById('#{field_id}'), {});")
+      end
+    %>
+
+    <textarea id="hide" style="display:none;"><%= @issue && @issue.keyword ? @issue.keyword.current : '# - except_meta' %></textarea>
+
+    <% if issue.edit_keywords_check_tracker && issue.edit_keywords_visible %>
+      <%= hidden_field_tag 'issue[default_kw_list]', @issue && @issue.keyword && !@issue.keyword.current.blank? ? @issue.keyword.current : '# except_meta - except_meta' %>
+    <% end %>
+
+      <% if issue.edit_layout_check_tracker && issue.edit_layout_visible %>
+        <p id="layouts2">
+          <label>Layout</label>
+          <%= text_area_tag 'issue[layouts_list]', @issue.try(:layout).try(:layout), size: "25x20", id: "layouts" %>
+        </p>
+      <% end %>
+
+      <%= keyword_wikitoolbar_for 'layouts', preview_issue_path(:project_id => @issue.try(:project), :issue_id => @issue.try(:id)) %>
+
+      <% if issue.edit_kw_range_check_tracker && issue.edit_kw_range_visible %>
+        <p id="range2">
+          <label>Range</label>
+          <%= text_field_tag 'issue[kw_ranges_list]', @issue.try(:kw_range).try(:current) %>
+          <%= select_tag "issue[kw_range_type]", options_for_select(["Words", "Symbols" ], @issue.try(:kw_range).try(:kw_range_type)) %>
+        </p>
+      <% end %>
+
+      <% if issue.edit_google_documents_check_tracker && issue.edit_google_documents_visible %>
+        <p id="google_document2">
+          <label><%= l(:google_documents) %></label>
+          <%= text_field_tag 'issue[google_documents_list]', @issue.try(:google_document).try(:current) %>
+        </p>
+      <% end %>
+
+      <% if issue.edit_title_characters_range_check_tracker || issue.edit_title_characters_range_type_check_tracker %>
+        <% if issue.edit_title_characters_range_visible || issue.edit_title_characters_range_type_visible %>
+          <p id='title_characters_range'>
+            <label>Title Characters Range</label>
+            <% if issue.edit_title_characters_range_check_tracker %>
+              <% if issue.edit_title_characters_range_visible %>
+                <%= text_field_tag 'issue[title_characters_ranges_list]', @issue.try(:title_characters_range).try(:current) %>
+              <% end %>
+            <% end %>
+            <% if issue.edit_title_characters_range_type_check_tracker %>
+              <% if issue.edit_title_characters_range_type_visible %>
+                <%= select_tag 'issue[title_characters_ranges_type]', options_for_select(['','Including Spaces', 'Excluding Spaces'], @issue.try(:title_characters_range).try(:range_type)) %>
+              <% end %>
+            <% end %>
+          </p>
+        <% end %>
+      <% end %>
+
+      <% if issue.edit_description_characters_range_check_tracker || issue.edit_description_characters_range_type_check_tracker %>
+        <% if issue.edit_description_characters_range_visible || issue.edit_description_characters_range_type_visible %>
+          <p id='description_characters_range'>
+            <label>Description Characters Range</label>
+            <% if issue.edit_description_characters_range_check_tracker %>
+              <% if issue.edit_description_characters_range_visible %>
+                <%= text_field_tag 'issue[description_characters_range_list]', @issue.try(:description_characters_range).try(:current) %>
+              <% end %>
+            <% end %>
+            <% if issue.edit_description_characters_range_type_check_tracker %>
+              <% if issue.edit_description_characters_range_type_visible %>
+                <%= select_tag 'issue[description_characters_range_type]', options_for_select(['','Including Spaces', 'Excluding Spaces' ], @issue.try(:description_characters_range).try(:range_type)) %>
+              <% end %>
+            <% end %>
+          </p>
+        <% end %>
+      <% end %>
+
+      <div id="app">
+        <div class="cf_400 attribute">
+          <% if issue.edit_keywords_check_tracker && issue.edit_keywords_visible %>
+            <div class=jstBlock>
+              <div class="jstTabs tabs">
+                <ul class='list'>
+                  <li>
+                    <a href=# class="tab-edit kw-tab-edit" v-on:click.stop.prevent="toggleTab(), addWordList(), checkFieldtitle()" :class="{ selected: is_visible }">
+                      KWEditor
+                    </a>
+                  </li>
+                  <li>
+                    <a href=# class="tab-edit kw-tab-edit edit" v-on:click.stop.prevent="toggleTab()" :class="{ selected: !is_visible }">
+                      Edit
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <div class=jstEditor>
+                <div class="tab-box" v-show="!is_visible">
+                  <%= text_area_tag 'issue[kw_list]', @issue && @issue.keyword && !@issue.keyword.current.blank? ? @issue.keyword.current : '# except_meta - except_meta', rows: 10, cols: 60, class: "keywords", "v-model": "text" %>
+                </div>
+                <div class="tab-box" id="issue_keywords" v-show="is_visible">
+                  <div class="keywords-box d-flex" v-for="( item, i ) in data_array">
+                    <div class='toolbar'>
+                      <div class="remove-box" :data-index="i" @click="removeBox(i)">–</div>
+                      <div class="add-box" @click="addBox()">+</div>
+                    </div>
+                    <div class="left-keywords-box">
+                      <select class="select_title" v-model="item.kw_loc" @change="updateTextSelect(item)">
+                        <option value="title">Title</option>
+                        <option value="desc">Description</option>
+                        <option value="all">Anywhere</option>
+                        <option value="except_meta">Anywhere except meta</option>
+                        <option value="p">Paragraphs</option>
+                        <option value="h">Headings</option>
+                        <option value="every_h">Every Heading</option>
+                        <option value="h1">H1</option>
+                        <option value="h2">H2</option>
+                        <option value="h3">H3</option>
+                      </select>
+                      <textarea class="keywords" ref="list_words" @input="createWordList(i, $event)" @change="updateText()" placeholder="Insert keywords one per line or separated by commas, spaces, tabs"></textarea>
+                    </div>
+                    <div class="right-keywords-box">
+                      <div class="wrapper-input">
+                        <span v-if="clicked[i]">
+                          <input type="text" class="title-keywords" :value="items[i]" @input="updateLocType($event.target.value, item, i)" @input="updateTitle(i, $event)" @change="updateText()" placeholder="value">
+                        </span>
+
+                        <div style='display: flex;' v-else>
+                          <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+                          <h3 style="margin-left: auto; margin-right: auto">{{ locationValues[item.kw_loc] || item.kw_type }}<i class="material-icons" style="font-size: 15px;" @click="updateKwLoc(i)">library_books</i></h3>
+                        </div>
+                        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+                      </div>
+                      <div class="select-set-box" v-for="key  in item.kw_arr">
+                        <input class="input-set" v-model="key.name" placeholder="keyword" disabled>
+                        <input class="input-set" v-model="key.value" @change="updateText()" placeholder="value">
+                        <select class="select-set" v-model="key.type" @change="updateText()">
+                          <option value="%">%</option>
+                          <option value="@">@</option>
+                          <option value=""></option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+    <script type="text/javascript" charset="utf-8">
+      var myObject = new Vue({
+      		el: "#app",
+      		data: {
+            items: {},
+            locationValues: {
+              "title": "Title",
+              "desc": "Description",
+              "all": "Anywhere",
+              "except_meta": "Anywhere except meta",
+              "p": "Paragraphs",
+              "h": "Headings",
+              "every_h": "Every Heading",
+              "100w": "First 100 Words",
+              "150w": "First 150 Words",
+              "200w": "First 200 Words",
+              "250w": "First 250 Words",
+              "1h": "First Heading",
+              "2h": "Second Heading",
+              "3h": "Third Heading",
+              "h1": "H1",
+              "h2": "H2",
+              "h3": "H3",
+              "h4": "Heading4",
+              "h5": "Heading5",
+              "h6": "Heading6",
+              "1h1": "First Heading1",
+              "1h2": "First Heading2",
+              "1h3": "First Heading3",
+              "1h4": "First Heading4",
+              "1h5": "First Heading5",
+              "1h6": "First Heading6",
+              "2h1": "Second Heading1",
+              "2h2": "Second Heading2",
+              "2h3": "Second Heading3",
+              "2h4": "Second Heading4",
+              "2h5": "Second Heading5",
+              "2h6": "Second Heading6",
+              "3h1": "Third Heading1",
+              "3h2": "Third Heading2",
+              "3h3": "Third Heading3",
+              "3h4": "Third Heading4",
+              "3h5": "Third Heading5",
+              "3h6": "Third Heading6",
+              "4h1": "Fourth Heading1",
+              "4h2": "Fourth Heading2",
+              "4h3": "Fourth Heading2",
+              "4h4": "Fourth Heading4",
+              "4h5": "Fourth Heading5",
+              "4h6": "Fourth Heading6",
+              "5h1": "Fifth Heading1",
+              "5h2": "Fifth Heading2",
+              "5h3": "Fifth Heading3",
+              "5h4": "Fifth Heading4",
+              "5h5": "Fifth Heading5",
+              "5h6": "Fifth Heading6",
+              "6h1": "Sixth Heading1",
+              "6h2": "Sixth Heading2",
+              "6h3": "Sixth Heading3",
+              "6h4": "Sixth Heading4",
+              "6h5": "Sixth Heading5",
+              "1p": "First Paragraph",
+              "2p": "Second Paragraph",
+              "3p": "Third Paragraph",
+              "4p": "Fourth Paragraph",
+              "5p": "Fifth Paragraph",
+              "6p": "Sixth Paragraph",
+              "7p": "Seventh Paragraph",
+              "8p": "Eighth Paragraph",
+              "9p": "Ninth Paragraph",
+              "10p": "Tenth Paragraph"
+            },
+            clicked: [],
+      			text: '',
+      			is_visible: true,
+      			data_array: [],
+      			arr_tips: [],
+      			arr_select_val: ['title', 'desc', 'all', 'except_meta', 'p', 'h', '100w', '150w', '200w', '250w', '1h', '2h', '3h', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', '1h1', '1h2', '1h3', '1h4', '1h5', '1h6', '2h1', '2h2', '2h3', '2h4', '2h5', '2h6', '3h1', '3h2', '3h3', '3h4', '3h5', '3h6', '4h1', '4h2', '4h3', '4h4', '4h5', '4h6', '5h1', '5h2', '5h3', '5h4', '5h5', '5h6', '6h1', '6h2', '6h3', '6h4', '6h5', '1p', '2p', '3p', '4p', '5p', '6p', '7p', '8p', '9p', '10p']
+      		},
+      		watch: {
+            text: function (val) {
+              this.text = val;
+              this.showData();
+              this.addWordList();
+            },
+          },
+      		methods: {
+            updateKwLoc: function (item) {
+              this.$set(this.clicked, item, true)
+            },
+
+            updateTextSelect: function (item) {
+              if (item.kw_loc_type === "") {
+                item.kw_type = item.kw_loc
+              }
+
+              this.text = "";
+
+              this.data_array.map((value, i) => {
+                let str = '',
+                  link = '';
+
+                if (value.kw_arr) {
+                  value.kw_arr.forEach(val => {
+                    if (val.type == '@') {
+                      let b = val.value != '' ? " - " + val.value : '';
+                      str += val.type + ' ' + val.name + b + "\r\n";
+                    } else {
+                      let s = val.value != '' ? ' - '+val.value + val.type : '';
+                      str += val.name + s + "\r\n";
+                    }
+                  });
+                }
+
+                var type = this.items[i] === undefined ? value.kw_loc : value.kw_type
+                this.text += `# ${type} - ${value.kw_loc}\r\n${str}\r\n`;
+              });
+            },
+
+            updateText: function () {
+              this.text = "";
+
+              this.data_array.map((value, i) => {
+                let str = '',
+                  link = '';
+
+                if (value.kw_arr) {
+                  value.kw_arr.forEach(val => {
+                    if (val.type == '@') {
+                      let b = val.value != '' ? " - " + val.value : '';
+                      str += val.type + ' ' + val.name + b + "\r\n";
+                    } else {
+                      let s = val.value != '' ? ' - '+val.value + val.type : '';
+                      str += val.name + s + "\r\n";
+                    }
+                  });
+                }
+
+                var type = this.items[i] === undefined ? value.kw_loc : value.kw_type
+                this.text += `# ${type} - ${value.kw_loc}\r\n${str}\r\n`;
+
+                $('textarea#hide').val(this.text);
+              });
+            },
+
+            updateLocType: function (value, item, i) {
+              this.items[i] = value;
+              item.kw_type = value;
+              item.kw_loc_type = value;
+            },
+
+      			updateTitle: function (index, event) {
+      				this.data_array[index].kw_type = event.target.value;
+              this.data_array[index].kw_loc_type = event.target.value;
+      			},
+      			addWordList: function () {
+              if (this.$refs.list_words) {
+                this.$refs.list_words.forEach((elem, i) => {
+        					elem.value = '';
+        					if (this.data_array.length > i) {
+        						this.data_array[i].kw_arr.forEach((val, a) => {
+        							elem.value += val.name + "\r\n";
+        						});
+        					}
+        				});
+              }
+      			},
+      			createWordList: function (index, event) {
+              var textArea=document.getElementsByClassName("keywords")[index];
+              var numberOfLines=parseInt(textArea.value.length/textArea.cols, 10);
+      				let kw_arr = this.data_array[index].kw_arr;
+      				let valTextarea = event.target.value.replace(/(?:\r\n|\r|\n)/g, '<br>').split('<br>'),
+      					arr = [];
+
+      				valTextarea.forEach((val, i) => {
+      					if (val != '') {
+      						let kw_arr_item = "",
+      							type = "";
+      						if (i < kw_arr.length) {
+      							kw_arr_item = kw_arr[i].value;
+      							type = kw_arr[i].type;
+      						} else {
+      							kw_arr_item = "";
+      							type = "";
+      						}
+
+      						arr.push({
+      							name: val,
+      							value: kw_arr_item,
+      							type: type
+      						});
+      					}
+      				});
+      				this.data_array[index].kw_arr = arr;
+      				console.log(this.data_array);
+      			},
+
+            newLineFunction: function (numberOfLines) {
+                var myElement = document.querySelector(".select-set-box");
+                myElement.style.paddingTop = "50px";
+            },
+      			toggleTab: function () {
+      				this.is_visible = !this.is_visible;
+      				if (!this.is_visible) {
+      					this.text = '';
+      					this.createLineKeyWords();
+      				}
+      			},
+      			addBox: function () {
+      				let data_obj = {
+      					kw_type: "",
+      					kw_loc: "",
+      					kw_arr: []
+      				}
+      				this.data_array.push(data_obj);
+      			},
+
+      			removeBox: function (index) {
+              if (confirm("Are you sure?") == true) {
+                this.data_array.splice(index, 1);
+                this.updateText();
+              }
+      			},
+      			createAnArray: arr => {
+      				let arr_obj = [];
+
+              if (arr) {
+                arr.forEach(val => {
+
+                  let a = val.split(' - ');
+                  b = '', c = '';
+
+                  if (a.join().includes("%")) {
+
+                    arr_obj.push({
+                      name: a[0].trim(),
+                      value: a[1].replace('%', '').trim(),
+                      type: '%'
+                    });
+
+                  } else if (a.join().includes("@")) {
+
+                    arr_obj.push({
+                      name: a[0].replace('@', '').trim(),
+                      value: a[1].trim(),
+                      type: '@'
+                    });
+
+                  } else {
+
+                    if (a[1] != '') {
+                      if (typeof a[1] == 'number') {
+                        b = a[1];
+                        c = '';
+                      } else if (typeof a[1] == 'string') {
+                        b = a[1].replace(/[@,%]/, '');
+                      }
+
+                    } else {
+                      b = '', c = '';
+                    }
+
+                    arr_obj.push({
+                      name: a[0],
+                      value: b,
+                      type: c.trim()
+                    })
+                  }
+                });
+              }
+
+      				return arr_obj;
+      			},
+      			createAnArrayLinks: arr => {
+      				let arr_links = [];
+              if (arr) {
+                arr.forEach(elem => {
+                  let a = elem.split(' - ');
+                  arr_links.push({
+                    name: a[0].replace('@', '').trim(),
+                    value: a[1].trim(),
+                    type: '@'
+                  });
+                });
+              }
+      				return arr_links;
+      			},
+
+            createAnArrayPercent: arr => {
+              let arr_percent = [];
+              if (arr) {
+                arr.forEach(elem => {
+                  let a = elem.split(' - ');
+                  arr_percent.push({
+                    name: a[0].trim(),
+                    value: a[1].replace('%', '').trim(),
+                    type: '%'
+                  });
+                });
+              }
+              return arr_percent;
+            },
+
+      			createAnArrayObj: obj => {
+      				let arr_obj = [],
+      					b = '',
+      					c = '';
+
+      				for (let a in obj) {
+      					if (obj[a] != '') {
+      						if (typeof obj[a] == 'number') {
+      							b = obj[a];
+      							c = ''
+      						} else if (typeof obj[a] == 'string') {
+      							b = obj[a].replace(/[@,%]/, '');
+      						}
+      					} else {
+      						b = '', c = '';
+      					}
+
+      					arr_obj.push({
+      						name: a,
+      						value: b,
+      						type: c
+      					});
+      				}
+      				return arr_obj;
+      			},
+
+      			createLineKeyWords: function () {
+      				this.data_array.map((value, i) => {
+      					let str = '',
+      						link = '';
+
+                if (value.kw_arr) {
+                  value.kw_arr.forEach(val => {
+                    if (val.type == '@') {
+                      let b = val.value != '' ? " - " + val.value : '';
+                      str += val.type + ' ' + val.name + b + "\r\n";
+                    } else {
+                      let s = val.value != '' ? ' - '+val.value + val.type : '';
+                      str += val.name + s + "\r\n";
+                    }
+                  });
+                }
+
+                var type = this.items[i] === undefined ? value.kw_loc : value.kw_type
+                this.text += `# ${type} - ${value.kw_loc}\r\n${str}\r\n`;
+      				});
+      			},
+
+      			showData: function () {
+
+              if (this.text) {
+                let arrKeyWorld = this.text.split('#').map((val, i) => {
+
+                  let valSpa = val.replace(/(?:\r\n|\r|\n)/g, '<br>').split('<br>'),
+                    clearedOfSpa = valSpa.filter(obj => obj.length > 0);
+
+                  if (clearedOfSpa.length > 0) {
+                    let title = clearedOfSpa[0].split('-'),
+                      loc = title[1] != undefined ? title[1] : "",
+                      arrKey = [],
+                      arrVal = [];
+                      arrPercentVal = [];
+
+                    for (let i = 1; i < clearedOfSpa.length; i++) {
+                      arrKey.push(clearedOfSpa[i]);
+                    }
+
+                    let arrObjkey = this.createAnArray(arrKey),
+                      arrObj = this.createAnArrayLinks(arrVal);
+                      arrPercent = this.createAnArrayPercent(arrPercentVal);
+
+                    if (arrObj) {
+                      arrObj.forEach(obj => arrObjkey.push(obj));
+                    }
+
+                    if (arrPercent) {
+                      arrPercent.forEach(obj => arrObjkey.push(obj));
+                    }
+
+                    return {
+                      kw_type: title[0].trim(),
+                      kw_loc: loc.trim(),
+                      kw_arr: arrObjkey
+                    }
+                  }
+                });
+                this.data_array = arrKeyWorld.filter(a => a != undefined);
+                console.log(this.data_array);
+              }
+      			},
+
+      			addTitle: function (index, event, kw_loc) {
+      				let val = event.target.value.trim();
+      				event.target.nextElementSibling.innerHTML = "";
+
+              if (this.arr_select_val) {
+                this.arr_select_val.forEach(elem => {
+                  if (elem.toUpperCase().search(val.toUpperCase()) > -1) {
+                    event.target.nextElementSibling.innerHTML += `<li>${elem}</li>`
+                  }
+                });
+              }
+      			},
+
+      			addTips: function (index, event) {
+      				this.data_array[index].kw_loc = event.target.innerText;
+      				event.target.parentElement.innerHTML = '';
+      			},
+
+      			checkFieldtitle: function () {
+              if (this.$refs.select_title) {
+                this.$refs.select_title.forEach(elem => {
+                  if (this.arr_select_val.indexOf(elem.value.trim()) > -1) {
+                    elem.classList.remove("error");
+                  } else {
+                    elem.classList.add("error");
+                  }
+                });
+              }
+      			},
+
+      			removeClassError: function (index) {
+      				this.$refs.select_title[index].classList.remove("error");
+      			}
+      		},
+
+      		mounted() {
+            const issueID = location.toString().split('issues/')[1]
+            this.text = $(".keywords").text();
+            this.showData();
+
+            var layoutValue = localStorage.getItem('layout');
+            if (JSON.stringify(layoutValue) !== JSON.stringify("undefined") && layoutValue !== null) {
+              if (layoutValue !== '') {
+                $("#layouts").val(layoutValue);
+                localStorage.removeItem('layout');
+              }
+            }
+
+            var kwRangeValue = localStorage.getItem('kw_range');
+            if (JSON.stringify(kwRangeValue) !== JSON.stringify("undefined") && kwRangeValue !== null ) {
+              if (kwRangeValue !== '') {
+                $("#issue_kw_ranges_list").val(kwRangeValue);
+                localStorage.removeItem('kw_range');
+              }
+            }
+
+            var googleDocumentValue = localStorage.getItem('google_document');
+            if (JSON.stringify(googleDocumentValue) !== JSON.stringify("undefined") && googleDocumentValue !== null ) {
+              if (googleDocumentValue !== '') {
+                $("#issue_google_documents_list").val(googleDocumentValue);
+                localStorage.removeItem('google_document');
+              }
+            }
+
+            var keywordsValue = localStorage.getItem('keywords');
+
+            if (keywordsValue !== null || keywordsValue !== undefined) {
+              if (keywordsValue !== '') {
+                this.text = keywordsValue;
+
+                if ($(".keywords").text() === '') {
+                  this.showData();
+                }
+
+                $('textarea#hide').val(keywordsValue);
+                localStorage.removeItem('keywords');
+              }
+            }
+
+            setTimeout(() => {
+                this.addWordList();
+            }, 500);
+      		}
+      	});
+
+        function saveCache() {
+          var kw_range = $('#issue_kw_ranges_list').val();
+          localStorage.setItem('kw_range', kw_range);
+
+          var google_document = $('#issue_google_documents_list').val();
+          localStorage.setItem('google_document', google_document);
+
+          var layout = $('#layouts').val();
+          localStorage.setItem('layout', layout);
+
+          var keywords =  $('textarea#hide').val();
+          localStorage.setItem('keywords', keywords);
+        }
+
+        $(document).on("click","input[type='submit']", function(){
+          var google_document = $('#issue_google_documents_list').val();
+          var keywords =  $('textarea#hide').val();
+          var layout = $('#layouts').val();
+          localStorage.setItem('kw_range', '');
+          localStorage.setItem('google_document', '');
+          localStorage.setItem('layout', '');
+          localStorage.setItem('keywords', '');
+        });
+
+        $(window).on('beforeunload', function(){
+          localStorage.setItem('keywords', '');
+          localStorage.setItem('layout', '');
+          localStorage.setItem('google_document', '');
+          localStorage.setItem('kw_range', '');
+        });
+
+        $("#issue_tracker_id").click(function() {
+          saveCache();
+        });
+
+        $("#issue_status_id").click(function() {
+          saveCache();
+        });
+    </script>
+
+  </body>
+</html>
